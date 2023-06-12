@@ -1,6 +1,7 @@
 from movie_app import MovieApp
 from storage_json import StorageJson
 from storage_csv import StorageCsv
+from colorama import Fore, Style
 import json
 import csv
 
@@ -9,7 +10,7 @@ def main():
     """The main function of the program.
     It prints a menu to the console and executes the corresponding function
     based on the user's input."""
-    file = input("Enter file name to open or if it does not exist it will be created: ")
+    file = input(f"{Fore.LIGHTGREEN_EX}Enter file name to open or if it does not exist it will be created: {Style.RESET_ALL}")
     try:
         if file.endswith(".csv"):
             storage = StorageCsv(file)
@@ -21,12 +22,15 @@ def main():
             storage = StorageJson(file)
             movie_app = MovieApp(storage)
             movie_app.run()
+        else:
+            raise FileNotFoundError
     except FileNotFoundError:
         if file.endswith(".json"):
             with open(file, "w") as new_file:
                 data = {}
                 json.dump(data, new_file, indent=4)
-                print(f"File with name: {file}, has been created!")
+                print(f"{Fore.LIGHTBLUE_EX}\nNo such file in directory. File with name: {Style.RESET_ALL}{file},"
+                      f" {Fore.LIGHTBLUE_EX}has been created!\n{Style.RESET_ALL}")
             storage = StorageJson(file)
             movie_app = MovieApp(storage)
             movie_app.run()
@@ -38,7 +42,8 @@ def main():
             with open(file, "w") as new_file:
                 writer = csv.writer(new_file)
                 writer.writerow(["title", "rating", "year", "notes"])
-                print(f"File with name: {file}.csv, has been created!")
+                print(f"{Fore.LIGHTBLUE_EX}\nNo such file in directory. File with name: {Style.RESET_ALL}{file},"
+                      f" {Fore.LIGHTBLUE_EX}has been created!\n{Style.RESET_ALL}")
             storage = StorageCsv(file)
             movie_app = MovieApp(storage)
             movie_app.run()
